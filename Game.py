@@ -1,41 +1,41 @@
 
 # coding: utf-8
-from Money import Money, MoneyContainer, MoneyVerbosity, values
-from typing import Optional
+from Player import Player
+from typing import Optional, NamedTuple
 from shutil import copyfile
-from pickle import load, dump
+from Serialisation import load, dump
 import Config
+from Version import Version
 
 class Game(object):
-    savings : Money = Money(0)
-    tips : MoneyContainer = MoneyContainer(values['Pig Pen'])
+    player : Player
     frame_counter : int = 0
-    def __init__(self, old_game : Optional['Game'] = None) -> None:
-        if old_game is None:
-            return
-        self.savings = old_game.savings
-        self.tips = old_game.tips
-        self.frame_counter = old_game.frame_counter
+    version : Version = Version(0,0,1)
+    def __init__(self) -> None:
+        self.player = Player()
     def advance(self) -> None:
         self.frame_counter += 1
         if self.frame_counter % Config.SAVE_FRAMES == 0:
             # TODO draw "Saving" somewhere unobtrusive and force-refresh
             self.save()
     def gain_tip(self) -> None:
-        self.tips.add(1)
+        self.player.tips.add(1)
     def save_tips(self) -> None:
-        self.savings.value += self.tips.value
-        self.tips.value = 0
+        self.player.savings.value += self.player.tips.value
+        self.player.tips.value = 0
     def backup(self) -> None:
         try:
             copyfile(Config.SAVE_FILE, Config.BACKUP_FILE)
         except FileNotFoundError:
             pass
+    def valid(self) -> bool:
+        # TODO detect incorrect states caused by bugs or version changes
+        return True
     def save(self) -> None:
-        self.backup()
-        with open(Config.SAVE_FILE, 'wb') as file:
-            dump(self, file)
+        if self.valid():
+            self.backup()
+        dump(self, Config.SAVE_FILE)
     @classmethod
     def load(cls) -> 'Game':
-        with open(Config.SAVE_FILE, 'rb') as file:
-            return cls(load(file))
+        game : 'Game' = load(Config.SAVE_FILE)
+        return game
