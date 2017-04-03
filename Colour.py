@@ -2,7 +2,6 @@
 # coding: utf-8
 from bearlibterminal import terminal as blt
 
-blt.open()
 BLT_BLACK : int = blt.color_from_name('black')
 BLT_WHITE : int = blt.color_from_name('white')
 
