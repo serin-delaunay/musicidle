@@ -13,8 +13,10 @@ class Interface(object):
     def __init__(self, presentation : Presentation):
         set_mouse_only()
         self.presentation = presentation
-        self.presentation.size.x = blt.state(blt.TK_WIDTH)
-        self.presentation.size.y = blt.state(blt.TK_HEIGHT)
+        blt.set("window: title = {0}, size = {1}, cellsize = {2}".format(
+            Config.WINDOW_TITLE, Config.WINDOW_SIZE.blt(), Config.CELL_SIZE.blt()))
+        blt.set("font: {0}, size = {1}, codepage = {2}".format(
+            Config.FONT_FILE, Config.FONT_SIZE.blt(), Config.FONT_CODEPAGE))
     def draw(self):
         self.presentation.update()
         blt.clear()

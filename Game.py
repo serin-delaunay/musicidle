@@ -9,10 +9,12 @@ from Version import Version
 
 class Game(object):
     player : Player
-    frame_counter : int = 0
-    version : Version = Version(0,0,1)
+    frame_counter : int
+    version : Version
     def __init__(self) -> None:
         self.player = Player()
+        self.frame_counter = 0
+        self.version = Version(0,0,2)
     def advance(self) -> None:
         self.frame_counter += 1
         if self.frame_counter % Config.SAVE_FRAMES == 0:
