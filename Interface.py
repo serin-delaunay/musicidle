@@ -5,10 +5,11 @@ from bearlibterminal import terminal as blt
 from FPSLimiter import FPSLimiter
 from vec import vec
 from Mouse import set_mouse_only, get_mouse_input
+import Config
 
 class Interface(object):
     presentation : Presentation
-    fps_limiter : FPSLimiter = FPSLimiter()
+    fps_limiter : FPSLimiter = FPSLimiter(Config.FRAMES_PER_SECOND)
     def __init__(self, presentation : Presentation):
         set_mouse_only()
         self.presentation = presentation

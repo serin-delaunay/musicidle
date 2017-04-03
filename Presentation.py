@@ -13,6 +13,7 @@ class Presentation(object):
     def __init__(self, game : Game):
         self.game = game
     def update(self):
+        self.game.advance()
         text = 'Tips: {0}. Savings: {1}.'.format(self.game.tips, self.game.savings)
         self.root = PrintArgs(text, vec(0,0),bbox=self.size)
     def handle(self, signal):
