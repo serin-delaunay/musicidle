@@ -44,6 +44,7 @@ def make_denominations(spec : List[DenominationSpec]) -> List[Denomination]:
         result.append(ds.make_denomination(result[-1]))
     return result
 
+# TODO move money specifics into Data.py
 _denomination_spec : List[DenominationSpec] = [
     DenominationSpec(1, 'mite'),
     DenominationSpec(6, 'fortress', 'fortresses'),
@@ -77,13 +78,15 @@ class Money(object):
                  value : int = 0,
                  verbosity : MoneyVerbosity = MoneyVerbosity.full,
                  abbreviate : bool = False) -> None:
-        self.value=value
+        self.value = value
         self.verbosity = verbosity
         self.abbreviate = abbreviate
     def __repr__(self):
         return 'Money({0}, {1}, {2})'.format(self.value, self.verbosity,
                                              'short' if self.abbreviate else 'long')
     def __str__(self):
+        # Denominations must be used in this function.
+        # How should this function change when data is moved to Data.py?
         space = '' if self.abbreviate else ' '
         if self.verbosity == MoneyVerbosity.smallest:
             return '{0}{1}{2}'.format(self.value,
