@@ -4,7 +4,6 @@ from vec import vec
 
 FRAMES_PER_SECOND : int = 10
 SAVE_SECONDS : int = 30
-SAVE_FRAMES : int = SAVE_SECONDS * FRAMES_PER_SECOND
 SAVE_FILE = 'savefile.json'
 BACKUP_FILE = 'savefile.json.bak'
 

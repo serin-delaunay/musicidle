@@ -4,20 +4,21 @@ from Player import Player
 from typing import Optional, NamedTuple
 from shutil import copyfile
 from Serialisation import load, dump
+from Timer import Timer
 import Config
 from Version import Version
 
 class Game(object):
     player : Player
-    frame_counter : int
+    timer : Timer
     version : Version
     def __init__(self) -> None:
         self.player = Player()
-        self.frame_counter = 0
-        self.version = Version(0,0,3)
+        self.timer = Timer
+        self.version = Version(0,0,4)
     def advance(self) -> None:
-        self.frame_counter += 1
-        if self.frame_counter % Config.SAVE_FRAMES == 0:
+        self.timer.advance()
+        if self.timer.regular_event(Config.SAVE_SECONDS):
             # TODO draw "Saving" somewhere unobtrusive and force-refresh
             self.save()
     def gain_tip(self) -> None:
