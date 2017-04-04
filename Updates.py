@@ -32,18 +32,18 @@ def update(game : Game) -> None:
             game.version = version
 
 @register_update(0,0,2)
-def _u002(game : Game):
+def _update(game : Game):
     from Money import Money, MoneyContainer, MoneyVerbosity, values
     game.player.savings = Money(0)
     game.player.tips = MoneyContainer(values['Pig Pen'])
 
 @register_update(0,0,3)
-def _u003(game : Game):
+def _update(game : Game):
     from Agent import Agent
     Agent.__init__(game.player)
 
 @register_update(0,0,4)
-def _u004(game : Game):
+def _update(game : Game):
     from fractions import Fraction
     import Config
     from Timer import Timer
@@ -51,5 +51,13 @@ def _u004(game : Game):
     game.timer.time = Fraction(game.frame_counter, Config.FRAMES_PER_SECOND)
 
 @register_update(0,0,5)
-def _u005(game : Game):
+def _update(game : Game):
     del game.frame_counter
+
+@register_update(0,0,6)
+def _update(game : Game):
+    game.performances = []
+
+@register_update(0,0,7)
+def _update(game : Game):
+    del game.player.tips
