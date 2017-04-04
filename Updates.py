@@ -36,3 +36,8 @@ def _u002(game : Game):
     from Money import Money, MoneyContainer, MoneyVerbosity, values
     game.player.savings = Money(0)
     game.player.tips = MoneyContainer(values['Pig Pen'])
+
+@register_update(0,0,3)
+def _u003(game : Game):
+    from Agent import Agent
+    Agent.__init__(game.player)

@@ -14,7 +14,7 @@ class Game(object):
     def __init__(self) -> None:
         self.player = Player()
         self.frame_counter = 0
-        self.version = Version(0,0,2)
+        self.version = Version(0,0,3)
     def advance(self) -> None:
         self.frame_counter += 1
         if self.frame_counter % Config.SAVE_FRAMES == 0:
