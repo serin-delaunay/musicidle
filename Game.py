@@ -19,7 +19,7 @@ class Game(object):
     performers : List[Performer]
     def __init__(self) -> None:
         self.player = Player()
-        self.timer = Timer
+        self.timer = Timer()
         self.performances = []
         self.performers = [self.player]
         self.version = Version(0,0,8)
