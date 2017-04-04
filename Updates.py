@@ -10,6 +10,8 @@ updates : SortedDict = SortedDict()
 
 Updater = Callable[[Game], None]
 
+hotfixes : List[Updater] = []
+
 def register_update(major : int = 0,
                     minor : int = 0,
                     revision : int = 0):
@@ -30,6 +32,12 @@ def update(game : Game) -> None:
         for u in updates[version]:
             u(game)
             game.version = version
+    h : Updater
+    for h in hotfixes:
+        h(game)
+
+def hotfix(f : Updater):
+    hotfixes.append(f)
 
 @register_update(0,0,2)
 def _update(game : Game):
@@ -61,3 +69,14 @@ def _update(game : Game):
 @register_update(0,0,7)
 def _update(game : Game):
     del game.player.tips
+
+@register_update(0,0,8)
+def _update(game : Game):
+    game.performers = [game.player]
+    for p in game.performances:
+        p.performer = game.player
+    game.player.performing = False
+
+@hotfix
+def _update(game : Game):
+    pass

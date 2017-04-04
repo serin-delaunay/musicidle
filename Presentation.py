@@ -15,14 +15,18 @@ class Presentation(object):
         self.root = DisplayDict(vec(0,0))
     def update(self):
         self.game.advance()
+        player_text = 'Name: {0}'.format(self.game.player.name)
         self.root.elements['name'] = Clickable(
-            PrintArgs(self.game.player.name, vec(0,0), bbox=Config.WINDOW_SIZE))
+            PrintArgs(player_text, vec(0,0), bbox=Config.WINDOW_SIZE))
+        performers_text = 'Performers: {0}.'.format(len(self.game.performers))
+        self.root.elements['performers'] = Clickable(
+            PrintArgs(performers_text, vec(0,1),bbox=Config.WINDOW_SIZE))
         performances_text = 'Performances: {0}.'.format(len(self.game.performances))
         self.root.elements['performances'] = Clickable(
-            PrintArgs(performances_text, vec(0,1),bbox=Config.WINDOW_SIZE))
+            PrintArgs(performances_text, vec(0,2),bbox=Config.WINDOW_SIZE))
         savings_text = 'Savings: {0}.'.format(self.game.player.savings)
         self.root.elements['savings'] = Clickable(
-            PrintArgs(savings_text, vec(0,2),bbox=Config.WINDOW_SIZE))
+            PrintArgs(savings_text, vec(0,3),bbox=Config.WINDOW_SIZE))
     def handle(self, signal):
         if signal.event_type == MouseEventType.close:
             self.game.save()
@@ -32,4 +36,4 @@ class Presentation(object):
             if signal.event_type == MouseEventType.left:
                 self.game.start_performance()
             elif signal.event_type == MouseEventType.right:
-                self.game.save_all_tips()
+                self.game.add_performer()

@@ -4,6 +4,7 @@ from Money import Money, MoneyContainer, values
 from typing import NamedTuple, Union
 from numpy.random import poisson
 from fractions import Fraction
+from Performer import Performer
 
 class Performance(object):
     tip_size : Money
@@ -13,9 +14,11 @@ class Performance(object):
     end_time : Fraction
     duration : Fraction
     finished : bool
+    performer : Performer
     def __init__(self,
                  tip_size : int, tips : int, tip_rate : float, 
-                 start_time : Union[Fraction, int], duration : Union[Fraction,int]):
+                 start_time : Union[Fraction, int], duration : Union[Fraction,int],
+                 performer : Performer):
         self.tip_size = Money(tip_size)
         self.tips = MoneyContainer(tips)
         self.tip_rate = tip_rate
@@ -24,10 +27,14 @@ class Performance(object):
         self.end_time = start_time + duration
         self.previous_time = self.start_time
         self.finished = False
+        assert not performer.performing
+        performer.performing = True
+        self.performer = performer
     def advance(self, dt : Fraction):
         current_time = min(self.previous_time + dt, self.end_time)
         if current_time >= self.end_time or current_time < self.start_time:
             self.finished = True
+            self.performer.performing = False
         real_dt = current_time - self.previous_time
         self.previous_time = current_time
         tip_count = poisson(self.tip_rate * real_dt)

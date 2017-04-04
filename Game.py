@@ -8,17 +8,20 @@ from Serialisation import load, dump
 from Timer import Timer
 import Config
 from Version import Version
+from Performer import Performer
 
 class Game(object):
     player : Player
     timer : Timer
     version : Version
     performances : List[Performance]
+    performers : List[Performer]
     def __init__(self) -> None:
         self.player = Player()
         self.timer = Timer
         self.performances = []
-        self.version = Version(0,0,7)
+        self.performers = [self.player]
+        self.version = Version(0,0,8)
     def advance(self) -> None:
         self.timer.advance()
         for p in self.performances:
@@ -29,9 +32,13 @@ class Game(object):
         if self.timer.regular_event(Config.SAVE_SECONDS):
             # TODO draw "Saving" somewhere unobtrusive and force-refresh
             self.save()
+    def add_performer(self):
+        self.performers.append(Performer())
     def start_performance(self):
-        #if len(performances) == 0:
-        self.performances.append(Performance(1,24,0.5,self.timer.time,5))
+        for p in self.performers:
+            if not p.performing:
+                self.performances.append(Performance(1,24,0.5,self.timer.time,5, p))
+                break
     def save_tips(self, performance) -> None:
         self.player.savings.value += performance.tips.value
         performance.tips.value = 0

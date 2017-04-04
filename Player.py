@@ -3,8 +3,9 @@
 from Money import Money, MoneyContainer, MoneyVerbosity, values
 from typing import Optional
 from Agent import Agent
+from Performer import Performer
 
-class Player(Agent):
+class Player(Performer):
     savings : Money
     def __init__(self) -> None:
         super().__init__()
