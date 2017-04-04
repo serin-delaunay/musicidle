@@ -7,6 +7,7 @@ from shutil import copyfile
 from Serialisation import load, dump
 from Timer import Timer
 import Config
+import Data
 from Version import Version
 from Performer import Performer
 
@@ -34,6 +35,10 @@ class Game(object):
             self.save()
     def add_performer(self):
         self.performers.append(Performer())
+    def hire_performer(self):
+        if self.player.savings.value >= Data.PERFORMER_COST:
+            self.player.savings.value -= Data.PERFORMER_COST
+            self.add_performer()
     def start_performance(self):
         for p in self.performers:
             if not p.performing:

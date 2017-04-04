@@ -21,7 +21,7 @@ class MouseEventBase(metaclass=ABCMeta):
     def _read(cls) -> 'MouseEventBase': pass
     @staticmethod
     def mouse_position() -> vec:
-        return vec(blt.state(blt.TK_MOUSE_X, blt.TK_MOUSE_Y))
+        return vec(blt.state(blt.TK_MOUSE_X), blt.state(blt.TK_MOUSE_Y))
 
 class _MouseClickEvent(NamedTuple):
     event_type : MouseEventType

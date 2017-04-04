@@ -7,7 +7,7 @@ SAVE_SECONDS : int = 30
 SAVE_FILE = 'savefile.json'
 BACKUP_FILE = 'savefile.json.bak'
 
-CELL_SIZE = vec(8,16)
+CELL_SIZE = vec(8,15)
 WINDOW_TITLE = "Music Idle"
 WINDOW_SIZE = vec(100,40)
 SET_FONT = True

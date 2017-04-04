@@ -4,7 +4,7 @@ from Presentation import Presentation
 from bearlibterminal import terminal as blt
 from FPSLimiter import FPSLimiter
 from vec import vec
-from Mouse import set_mouse_only, get_mouse_input
+from Mouse import set_mouse_only, get_mouse_input, MouseEventBase
 import Config
 
 class Interface(object):
@@ -13,6 +13,7 @@ class Interface(object):
     def __init__(self, presentation : Presentation):
         set_mouse_only()
         self.presentation = presentation
+        blt.composition(True)
         blt.set("window: title = {0}, size = {1}, cellsize = {2}".format(
             Config.WINDOW_TITLE, Config.WINDOW_SIZE.blt(), Config.CELL_SIZE.blt()))
         if Config.SET_FONT:
@@ -21,14 +22,14 @@ class Interface(object):
     def draw(self):
         self.presentation.update()
         blt.clear()
-        self.presentation.root.draw(vec(0,0))
+        self.presentation.draw()
         blt.refresh()
     def loop(self):
         while not self.presentation.stop:
             self.fps_limiter.wait()
             self.draw()
             while blt.has_input():
-                signal = get_mouse_input()
-                self.presentation.handle(signal)
+                event : MouseEventBase = get_mouse_input()
+                self.presentation.handle(event)
                 if self.presentation.stop:
                     break

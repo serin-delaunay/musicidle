@@ -6,7 +6,9 @@ from abc import ABCMeta, abstractmethod
 from vec import vec
 from Colour import Colour, black, white
 from enum import Enum, auto
+from Game import Game
 from Rectangle import Rectangle
+from Mouse import MouseEventBase, MouseEventType
 
 class DisplayElement(metaclass=ABCMeta):
     @abstractmethod
@@ -22,10 +24,11 @@ class _PutArgs(NamedTuple):
 class PutArgs(DisplayElement, _PutArgs):
     def draw(self, xy : vec, layer : int = 0) -> None:
         blt.layer(layer)
-        blt.color(self.colour.blt_colour())
-        if self.has_background:
-            blt.bkcolor(self.colour.opposite().blt_colour())
         rxy : vec = xy + self.xy
+        if self.has_background:
+            blt.color(self.colour.opposite().blt_colour())
+            blt.put_ext(rxy.x, rxy.y, self.dxy.x, self.dxy.y, '█')
+        blt.color(self.colour.blt_colour())
         blt.put_ext(rxy.x, rxy.y, self.dxy.x, self.dxy.y, self.char)
 
 class TextAlignmentH(Enum):
@@ -57,10 +60,17 @@ class _PrintArgs(NamedTuple):
 
 class PrintArgs(DisplayElement, _PrintArgs):
     def draw(self, xy : vec, layer : int = 0) -> None:
-        blt.color(self.colour.blt_colour())
-        if self.has_background:
-            blt.bkcolor(self.colour.opposite().blt_colour())
         rxy : vec = xy + self.xy
+        if self.has_background:
+            background = ('█'*self.bbox.x+'\n')*self.bbox.y
+            blt.color(self.colour.opposite().blt_colour())
+            if self.bbox is None:
+                blt.print_(rxy.x,rxy.y, background)
+            else:
+                blt.print_(rxy.x,rxy.y, background,
+                           self.bbox.x, self.bbox.y,
+                           self.align.code())
+        blt.color(self.colour.blt_colour())
         if self.bbox is None:
             blt.print_(rxy.x, rxy.y, self.text)
         else:
@@ -68,28 +78,35 @@ class PrintArgs(DisplayElement, _PrintArgs):
                        self.bbox.x, self.bbox.y,
                        self.align.code())
 
-Signals = Dict[str, Callable[[vec,int,Dict[str,Any]],Any]]
+Handlers = Dict[MouseEventType, Callable[[MouseEventBase],Any]]
 
 class Clickable(object):
     element : DisplayElement
     mouse_rect : Rectangle
-    signals : Signals
+    handlers : Handlers
     def __init__(self, element : DisplayElement,
                  mouse_rect : Rectangle = Rectangle(vec(0,0), vec(0,0)),
-                 signals : Signals = {}) -> None:
+                 mouse_rect_auto : bool = False,
+                 handlers : Handlers = {}) -> None:
         self.element = element
         self.mouse_rect = mouse_rect
-        self.signals = signals.copy()
-    def find_target(xy : vec, signal : int) -> Optional['Clickable']:
+        if mouse_rect_auto:
+            self.mouse_rect = Rectangle(self.element.xy, self.element.bbox)
+        self.handlers = handlers.copy()
+    def find_target(self, xy : vec,  event_type : MouseEventType) -> Optional['Clickable']:
         if xy in self.mouse_rect:
             if isinstance(self.element, DisplayGroup):
                 for clickable in self.element:
-                    result = clickable.find_target(xy - self.mouse_rect.top_left)
+                    result = clickable.find_target(
+                        xy - self.mouse_rect.top_left,
+                        event_type)
                     if result is not None:
                         return result
-            if signal in self.signals:
+            if event_type in self.handlers:
                 return self
         return None
+    def handle(self, event : MouseEventBase, game : Game) -> None:
+        self.handlers[event.event_type](event, game)
 
 class DisplayGroup(DisplayElement, metaclass=ABCMeta):
     xy : vec
