@@ -15,8 +15,9 @@ class Interface(object):
         self.presentation = presentation
         blt.set("window: title = {0}, size = {1}, cellsize = {2}".format(
             Config.WINDOW_TITLE, Config.WINDOW_SIZE.blt(), Config.CELL_SIZE.blt()))
-        blt.set("font: {0}, size = {1}, codepage = {2}".format(
-            Config.FONT_FILE, Config.FONT_SIZE.blt(), Config.FONT_CODEPAGE))
+        if Config.SET_FONT:
+            blt.set("font: {0}, size = {1}, codepage = {2}".format(
+                Config.FONT_FILE, Config.FONT_SIZE.blt(), Config.FONT_CODEPAGE))
     def draw(self):
         self.presentation.update()
         blt.clear()

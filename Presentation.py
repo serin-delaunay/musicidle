@@ -22,7 +22,7 @@ class Presentation(object):
         self.root.elements['savings'] = Clickable(
             PrintArgs(savings_text, vec(0,1),bbox=Config.WINDOW_SIZE))
         self.root.elements['extended'] = Clickable(
-            PrintArgs('Jovo Ivanišević', vec(0,2), bbox=Config.WINDOW_SIZE))
+            PrintArgs('Tapšiẖuni', vec(0,2), bbox=Config.WINDOW_SIZE))
     def handle(self, signal):
         if signal.event_type == MouseEventType.close:
             self.game.save()
