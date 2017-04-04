@@ -36,19 +36,20 @@ class Presentation(object):
         self.set_element('savings',PrintArgs(
             savings_text, vec(0,3),bbox=Config.WINDOW_SIZE))
         hire_performer = self.set_element('hire_performer',PrintArgs(
-            'HIRE\nPERFORMER', vec(0,Config.WINDOW_SIZE.y-2),bbox=vec(9,2),
+            'HIRE\nPERFORMER', vec(0,Config.WINDOW_SIZE.y-2),bbox=vec(11,2),
             colour=black, has_background=True,
             align=TextAlignment(TextAlignmentH.Centre)), mouse_rect_auto = True)
         hire_performer.handlers[MouseEventType.left] = lambda m, g : g.hire_performer()
+        start_performance = self.set_element('start_performance', PrintArgs(
+            'PERFORM', vec(12, Config.WINDOW_SIZE.y - 2), bbox = vec(9,2),
+            colour=black, has_background = True),
+            mouse_rect_auto = True)
+        start_performance.handlers[MouseEventType.left] = lambda m, g : g.start_performance()
     def handle(self, event):
         if event.event_type == MouseEventType.close:
             self.game.save()
             self.stop = True
         else:
-            print('looking for targets for {0}'.format(event))
             target = self.root.find_target(event.xy, event.event_type)
             if target is not None:
                 target.handle(event, self.game)
-            else:
-                if event.event_type == MouseEventType.left:
-                    self.game.start_performance()
