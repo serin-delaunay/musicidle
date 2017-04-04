@@ -42,7 +42,8 @@ class Presentation(object):
         hire_performer.handlers[MouseEventType.left] = lambda m, g : g.hire_performer()
         start_performance = self.set_element('start_performance', PrintArgs(
             'PERFORM', vec(12, Config.WINDOW_SIZE.y - 2), bbox = vec(9,2),
-            colour=black, has_background = True),
+            colour=black, has_background = True,
+            align=TextAlignment(TextAlignmentH.Centre)),
             mouse_rect_auto = True)
         start_performance.handlers[MouseEventType.left] = lambda m, g : g.start_performance()
     def handle(self, event):
